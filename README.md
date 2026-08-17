@@ -1,0 +1,76 @@
+# ppt-content-replace
+
+> 基于已有 PPT 模板的内容替换技能 —— 把一份 PPT 当作「版式模板」，用新素材（Word / 长文本）重写其中所有文字，输出一份**只改内容、版式样式完全不变**的新 PPT。
+
+[![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![platforms](https://img.shields.io/badge/platforms-windows%20%7C%20linux%20%7C%20macos-lightgrey.svg)](#安装)
+[![language](https://img.shields.io/badge/language-python%203-yellow.svg)](scripts)
+
+## 它是什么
+
+一个 **Hermes skill**：用户上传一份 PPT 作为版式模板，并提供新内容（Word 文档或大段文本），技能完成「只换内容不动版式」的整份 PPT 重写。
+
+核心思想：**PPT 结构 → 模板 Markdown（IR）→ AI 对齐 → 校验 → 原子回写**。
+
+- 解析与回写全部依赖 [OfficeCLI](https://d.officecli.ai/)（单一二进制），AI 只负责中间的内容对齐
+- 逐段落 `set --find/--replace` 编辑匹配的 `<a:t>` 文本节点 → 单 run 段落**零样式漂移**
+- 所有替换以一条 `officecli batch` 原子提交，任一失败自动回滚
+- 回写前强制校验门禁（`validate_md.py`），回写后按页 `get` 复核 + `view issues` 溢出对比基线
+- 表格完整支持；组合形状自动降级并在交付时如实告知受影响形状
+
+## 何时用
+
+触发词：**换内容、内容替换、套模板、改文案保持格式**。
+
+典型场景：上传旧 PPT + 新文案（Word 或长文本），要求「套用这个 PPT 的格式改内容」「生成同样式的新 PPT」。
+
+## 工作流
+
+1. **解析模板**：`parse_ppt.py deck.pptx` → 模板 IR（每个文本块的 path/role/level/size/budget）
+2. **规范化素材**：`normalize_input.py input.docx` → 纯文本素材
+3. **AI 对齐**（助手完成）：按模板结构重写内容，遵守字符预算，标记行逐字符保留
+4. **校验**：`validate_md.py` 强制门禁，不过不回写
+5. **原子回写 + 质检**：`apply_md.py` → 逐段 find/replace 零样式漂移，失败自动回滚
+6. **交付**：新 PPT + 如实报告改动块 / 保留原文 / 未替换形状
+
+## 安装
+
+作为 Hermes skill 部署（推荐）：
+
+```bash
+# 把整个仓库复制到你的 Hermes skills 目录（如 productivity/ppt-content-replace/）
+cp -r quseit-ppt-content-replace $HERMES_HOME/skills/productivity/ppt-content-replace
+```
+
+**前置条件**：
+
+- OfficeCLI 已安装（`officecli --version` 可执行）。脚本自动探测：`OFFICECLI` 环境变量 → PATH → `~/.office-form-filler/bin/officecli.exe` 等已知位置
+- Python 3（仅标准库，无第三方依赖）
+- 若 officecli 缺失：Windows 执行 `irm https://d.officecli.ai/install.ps1 | iex`
+
+## 仓库结构
+
+```
+quseit-ppt-content-replace/
+├── SKILL.md                    # 技能主文档（工作流 + 硬规则 + 降级路径）
+├── references/
+│   ├── ir-format.md            # IR 格式规范与 AI 对齐约束
+│   └── officecli-recipes.md    # 本技能用到的 OfficeCLI 命令速查
+├── scripts/
+│   ├── parse_ppt.py            # PPT → 模板 IR
+│   ├── normalize_input.py      # Word/文本 → 纯文本素材
+│   ├── validate_md.py          # 对齐结果校验门禁
+│   ├── apply_md.py             # 原子回写（batch find/replace + 质检）
+│   └── occ_common.py           # 公共：OfficeCLI 探测与调用
+└── work/                       # 运行产物目录（模板 IR / 素材 / final.md）
+```
+
+## 已知限制
+
+- OfficeCLI `set --find/--replace` 仅编辑匹配的 `<a:t>` 文本节点：单 run 段落零样式漂移；多 run 段落的整段替换会合并 run（继承首 run 样式）
+- 「粗体标签 + 普通正文」混排：模板携带 `find="..."` 提示，只替换正文 run，标签样式保留；段内更复杂的混排（如中间高亮词）可能丢失，需 L3 `raw` 编辑 XML
+- 组合形状（group）：解析可深入，但 find/replace 不支持 group 内路径，自动降级为成员 shape 级 `set text`（run 样式归一为 shape 默认），输出会列出受影响形状
+
+## License
+
+[MIT](LICENSE) © 2026 Tricro968
