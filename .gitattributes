@@ -1,0 +1,7 @@
+# Auto-detect text files; force LF in repo so Git on any OS produces
+# consistent line endings in committed sources.
+*               text=auto eol=lf
+
+# Windows-only shell scripts stay CRLF
+*.bat           text eol=crlf
+*.cmd           text eol=crlf

@@ -90,7 +90,11 @@ def _shape_blocks(shape, pptx_path):
         text = (para.get("text") or "").strip()
         if not text:
             continue
-        level = (para.get("format") or {}).get("level", 0) or 0
+        raw_level = (para.get("format") or {}).get("level", 0)
+        try:
+            level = int(raw_level)
+        except (TypeError, ValueError):
+            level = 0
         budget = max(len(text), 1)
         blocks.append({
             "path": para["path"], "role": role, "level": level,
