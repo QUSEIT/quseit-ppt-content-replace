@@ -44,9 +44,11 @@ cp -r quseit-ppt-content-replace $HERMES_HOME/skills/productivity/ppt-content-re
 
 **前置条件**：
 
-- OfficeCLI 已安装（`officecli --version` 可执行）。脚本自动探测：`OFFICECLI` 环境变量 → PATH → `~/.office-form-filler/bin/officecli.exe` 等已知位置
+- **OfficeCLI**（必装）。本技能所有 PPT 解析与回写均依赖 OfficeCLI，AI 仅负责中间的内容对齐。
+  - 源码仓库：https://github.com/iOfficeAI/OfficeCLI
+  - Windows 安装：`irm https://d.officecli.ai/install.ps1 | iex`
+  - 安装后验证：`officecli --version`
 - Python 3（仅标准库，无第三方依赖）
-- 若 officecli 缺失：Windows 执行 `irm https://d.officecli.ai/install.ps1 | iex`
 
 ## 仓库结构
 
