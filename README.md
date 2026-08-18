@@ -2,7 +2,7 @@
 
 > 基于已有 PPT 模板的内容替换技能 —— 把一份 PPT 当作「版式模板」，用新素材（Word / 长文本）重写其中所有文字，输出一份**只改内容、版式样式完全不变**的新 PPT。
 
-[![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](LICENSE)
 [![platforms](https://img.shields.io/badge/platforms-windows%20%7C%20linux%20%7C%20macos-lightgrey.svg)](#安装)
 [![language](https://img.shields.io/badge/language-python%203-yellow.svg)](scripts)
 
@@ -87,4 +87,4 @@ quseit-ppt-content-replace/
 
 ## License
 
-[MIT](LICENSE) © 2026 Tricro968
+[Apache-2.0](LICENSE) © 2026 Tricro968
