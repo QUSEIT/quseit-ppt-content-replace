@@ -61,11 +61,25 @@ quseit-ppt-content-replace/
 ├── scripts/
 │   ├── parse_ppt.py            # PPT → 模板 IR
 │   ├── normalize_input.py      # Word/文本 → 纯文本素材
-│   ├── validate_md.py          # 对齐结果校验门禁
-│   ├── apply_md.py             # 原子回写（batch find/replace + 质检）
-│   └── occ_common.py           # 公共：OfficeCLI 探测与调用
-└── work/                       # 运行产物目录（模板 IR / 素材 / final.md）
+│   ├── validate_md.py         # 对齐结果校验门禁
+│   ├── apply_md.py            # 原子回写（batch find/replace + 质检）
+│   ├── occ_common.py          # 公共：OfficeCLI 探测与调用
+│   └── check_officecli.py     # 检测/自动安装 OfficeCLI
+├── assets/                     # 可选：自包含 OfficeCLI 二进制（放入后技能完全独立运行）
+│   └── officecli.exe           # 放入后优先使用，缺则回退系统安装
+└── work/                      # 运行产物目录（模板 IR / 素材 / final.md）
 ```
+
+### 自包含 OfficeCLI（可选）
+
+技能支持 **自包含 OfficeCLI**，放入后其他用户克隆即可直接使用，无需单独安装：
+
+1. 从本机复制：`cp ~/.office-form-filler/bin/officecli.exe assets/`
+2. 或运行自动下载：`python scripts/check_officecli.py --install`
+
+技能会按以下优先级查找 OfficeCLI：
+1. `assets/officecli.exe`（技能自包含）
+2. 系统 PATH / 环境变量 / 常见安装路径
 
 ## 已知限制
 

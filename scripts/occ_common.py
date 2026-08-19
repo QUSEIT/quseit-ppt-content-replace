@@ -15,7 +15,20 @@ SLIDE_RE = re.compile(r"^<!--\s*slide:(\d+)\s*(.*?)\s*-->$")
 HEADER_RE = re.compile(r"^<!--\s*OCC-TEMPLATE\s+v1\s+(.*?)\s*-->$")
 
 
+def get_skill_dir():
+    """获取技能目录路径。"""
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    return os.path.dirname(script_dir)
+
+
 def find_officecli():
+    # 1. 技能目录内的 assets/officecli.exe（自包含优先）
+    skill_dir = get_skill_dir()
+    local_bin = os.path.join(skill_dir, "assets", "officecli.exe")
+    if os.path.isfile(local_bin):
+        return local_bin
+
+    # 2. 系统安装
     candidates = [
         os.environ.get("OFFICECLI"),
         shutil.which("officecli"),
@@ -24,11 +37,11 @@ def find_officecli():
         os.path.expanduser("~/.officecli/bin/officecli.exe"),
     ]
     for c in candidates:
-        if c and os.path.isfile(c):
-            return c
+        if c and os.path.isfile(os.path.expanduser(c)):
+            return os.path.expanduser(c)
     sys.exit(
-        "officecli not found. Set OFFICECLI env var, or install: "
-        "irm https://d.officecli.ai/install.ps1 | iex"
+        "officecli not found. Run: python scripts/check_officecli.py --install\n"
+        "Or manually install: https://github.com/iOfficeAI/OfficeCLI/releases"
     )
 
 
