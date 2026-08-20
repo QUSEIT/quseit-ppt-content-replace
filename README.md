@@ -74,7 +74,7 @@ quseit-ppt-content-replace/
 
 技能支持 **自包含 OfficeCLI**，放入后其他用户克隆即可直接使用，无需单独安装：
 
-1. 从本机复制：`cp ~/.office-form-filler/bin/officecli.exe assets/`
+1. 从本机复制：`cp ~/to/path/OfficeCLI/bin/officecli.exe assets/`
 2. 或运行自动下载：`python scripts/check_officecli.py --install`
 
 技能会按以下优先级查找 OfficeCLI：
