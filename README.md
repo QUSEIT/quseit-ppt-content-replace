@@ -1,6 +1,6 @@
 # ppt-content-replace
 
-> 基于已有 PPT 模板的内容替换技能 —— 把一份 PPT 当作「版式模板」，用新素材（Word / 长文本）重写其中所有文字，输出一份**只改内容、版式样式完全不变**的新 PPT。
+> 基于已有 PPT 模板的内容替换技能 —— 把一份 PPT 当作「版式模板」，用新素材（Word / 长文本 / markdown）重写其中所有文字，输出一份**只改内容、版式样式完全不变**的新 PPT。
 
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](LICENSE)
 [![platforms](https://img.shields.io/badge/platforms-windows%20%7C%20linux%20%7C%20macos-lightgrey.svg)](#安装)
